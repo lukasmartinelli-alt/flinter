@@ -108,7 +108,8 @@
 			</table>
         <script src="//cdn.jsdelivr.net/jquery/2.1.3/jquery.min.js"></script>
         <script src="//cdn.jsdelivr.net/mustache.js/0.8.1/mustache.min.js"></script>
-        <script src="//cdn.jsdelivr.net/typeahead.js/0.10.5/typeahead.bundle.min.js"></script>
+        <script src="//cdn.jsdelivr.net/typeahead.js/0.10.5/bloodhound.min.js"></script>
+        <script src="//cdn.jsdelivr.net/blazy/1.2.1/blazy.min.js"/></script>
         <script id="result-row" type="x-tmpl-mustache">
             <tr>
               <td class="repository">
@@ -116,17 +117,20 @@
               </td>
               <td class="status">
                   <a href="{{ &report_url }}">
-                    <img src="{{ &badge_url }}" alt="{{ status }}"/>
+                    <img src="https://img.shields.io/badge/flint-pending-lightgrey.svg?style=flat" data-src="{{ &badge_url }}" alt="{{ status }}"/>
                   </a>
               </td>
             </tr>
         </script>
         <script>
             $(function() {
+                var bLazy = new Blazy({ 
+                    selector: 'img'
+                });
                 var bloodhound = new Bloodhound({
                     name: 'repositories',
                     remote: 'search?q=%QUERY',
-                    limit: 20,
+                    limit: 15,
                     datumTokenizer: function(d) {
                         return Bloodhound.tokenizers.whitespace(d.repo);
                     },
@@ -161,6 +165,7 @@
                                 var rendered = renderSuggestion(suggestion);
                                 table.append(rendered);
                             });
+                            bLazy.revalidate();
                         });
                     }
                 });
