@@ -116,7 +116,7 @@
               </td>
               <td class="status">
                   <a href="{{ &report_url }}">
-                    <img src="{{ &badge_url }}" alt="status"/>
+                    <img src="{{ &badge_url }}" alt="{{ status }}"/>
                   </a>
               </td>
             </tr>
@@ -138,16 +138,16 @@
                 var template = $('#result-row').html();
                 Mustache.parse(template);
                 function renderSuggestion(suggestion) {
-                    var badge = 'failed-red';
-                    if(suggestion.flintStatus === 0) {
-                        badge = 'success-green';
+                    var badge_url = suggestion.repo + '.svg?style=flat';
+                    var status = 'failed';
+                    if(suggestion.flintStatus == 0) {
+                        status = 'successful';
                     }
-                    var badge_url = 'https://img.shields.io/badge/flint-' + badge +'.svg?style=flat';
-
                     var model = {
                         repo: suggestion.repo,
                         repo_url: 'https://github.com/' + suggestion.repo,
-                        badge_url: badge_url
+                        badge_url: badge_url,
+                        status: status
                     };
                     return Mustache.render(template, model); 
                 }

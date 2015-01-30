@@ -22,8 +22,10 @@ var github = new GitHubApi({
 });
 
 var autocomplete = require('./autocomplete')(github);
+var status = require('./status');
 
 app.use(express.static(path.join(__dirname, '/public')));
 app.get('/search', autocomplete.find);
+app.get('/:owner/:repo.svg', status.statusImage);
 
 http.listen(options.port);
