@@ -1,2 +1,3 @@
 # flinter
-Runs Flint on Github Repositories
+
+![Screenshot of Flinter](screenshot.png)
