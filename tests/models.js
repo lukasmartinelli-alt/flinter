@@ -1,6 +1,6 @@
 'use strict';
-var should = require('should');
 var models = require('../models');
+var assert = require('better-assert');
 
 describe('repo', function() {
     it('can be created', function() {
@@ -9,8 +9,8 @@ describe('repo', function() {
             commits: [{ sha: '60d806b05653d2d8c305a06928bebf604d3a6009'},
                       { sha: '1ab9d877b6efe62a1eb190024cd67cbc6d91d21a' }]
         });
-        should(repo.repo).equal('sandstorm-io/sandstorm');
-        should(repo.commits.length).equal(2);
+        assert(repo.repo == 'sandstorm-io/sandstorm');
+        assert(repo.commits.length == 2);
     });
 });
 
@@ -36,8 +36,7 @@ describe('commit', function() {
                           }],
             flintStatus: 1
         });
-        should.exist(c1.date);
-        should(c1.flintOutput.length).equal(0);
-        should(c2.flintOutput.length).equal(2);
+        assert(c1.flintOutput.length == 0);
+        assert(c2.flintOutput.length == 2);
     });
 });

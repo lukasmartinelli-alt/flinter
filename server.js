@@ -27,5 +27,6 @@ var status = require('./status');
 app.use(express.static(path.join(__dirname, '/public')));
 app.get('/search', autocomplete.find);
 app.get('/:owner/:repo.svg', status.statusImage);
+app.get('/:owner/:repo', status.checkRepo);
 
 http.listen(options.port);
