@@ -4,13 +4,13 @@ var eslint = require('gulp-eslint');
 var mocha = require('gulp-mocha');
 var istanbul = require('gulp-istanbul');
 
-gulp.task('test', function () {
+gulp.task('test', function (cb) {
     return gulp.src('*.js')
-        .pipe(istanbul())
+        .pipe(istanbul({includeUntested: true}))
         .pipe(istanbul.hookRequire())
         .on('finish', function () {
              gulp.src(['tests/*.js'])
-                .pipe(mocha())
+                .pipe(mocha({reporter: 'list'}))
                 .pipe(istanbul.writeReports());
         });
 });
