@@ -36,16 +36,23 @@ module.exports = function(app, github) {
 
     app.get('/:owner/:repo', function(req, res) {
         var fullName = req.params.owner + '/' + req.params.repo;
+        console.log('Status for ' + fullName + ' requested');
         repo.get(fullName).then(function(rep) {
            res.json(rep);
+        }, function(err) {
+            console.log('Could not find repo ' + fullName);
+            res.status(404);
+            res.send(err.message);
         });
     });
 
     app.put('/:owner/:repo', function(req, res) {
         var fullName = req.params.owner + '/' + req.params.repo;
         console.log('Subscribe ' + fullName);
-        repo.subscribe(fullName).then(function() {
-            res.status(200).send();
+        repo.subscribe(fullName).then(function(subscribedRepo) {
+            res.status(200);
+            res.json(subscribedRepo);
+            res.send();
         });
     });
 

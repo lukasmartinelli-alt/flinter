@@ -14,7 +14,9 @@ function demongify(doc) {
 }
 
 exports.all = function() {
-    return Repo.find({}).exec();
+    return Repo.find({}).exec().then(function(repos) {
+        return repos.map(demongify);
+    });
 };
 
 /** Add a repo but don't subscribe it. This is useful if you simply want to add
@@ -27,7 +29,7 @@ exports.add = function(fullName) {
  *  commits are actually checked with flint. */
 exports.subscribe = function(fullName) {
     var repo = { repo: fullName, subscribed: true };
-    return Repo.findOneAndUpdate({repo: fullName}, repo, {upsert: true}).exec();
+    return Repo.findOneAndUpdate({repo: fullName}, repo, {upsert: true}).exec().then(demongify);
 };
 
 /** Return repo including all commits */
@@ -37,6 +39,10 @@ exports.get = function(fullName) {
         Commit.find({ repo: fullName }).exec()
     ]);
     return queries.then(function(results) {
+        if(results[0] === null) {
+            throw 'Repo ' + fullName + ' not found in db';
+        }
+
         var repo = demongify(results[0]);
         repo.commits = results[1].map(demongify).map(function(c) {
             delete c.repo;
@@ -75,19 +81,20 @@ exports.checkPush = function(repo, commits) {
         if (err && err.code === duplicateKeyCode) {
             console.log('Tried to insert existing commit');
             return exports.lastCommit(repo);
-        } else {
-            throw err;
         }
     }).then(function(commit) {
         if(commit.status === 'unchecked') {
             return flintCommit(commit).then(function(warnings) {
                 commit.status = warnings.length > 0 ? 'failed' : 'success';
                 commit.warnings = warnings;
-                commit.save().then(function() {
-                    console.log('Commit ' + commit.sha + ' in repo ' + commit.repo + ' has ' + warnings.length + ' warnings');
-                });
+                commit.save();
+                console.log('Commit ' + commit.sha + ' in repo ' + commit.repo + ' has ' + warnings.length + ' warnings');
+                commit = demongify(commit);
                 return commit;
             });
+        } else {
+            commit = demongify(commit);
+            return commit;
         }
     });
 };

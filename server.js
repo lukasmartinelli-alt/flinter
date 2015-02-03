@@ -25,12 +25,10 @@ var github = new GitHubApi({
 });
 
 mongoose.connect(options.mongoUrl);
-
 app.use(bodyParser.json());
+require('./api')(app, github);
 app.use(express.static(path.join(__dirname, '/public')));
 
-require('./api')(app, github);
-
 http.listen(options.port);
-
-exports.app = app;
+exports.http = http;
+exports.options = options;

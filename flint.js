@@ -64,8 +64,9 @@ exports.flintCommit = function(commit) {
                 var warnings = lines.map(parseFlintWarning).filter(function(w) {
                     return w !== undefined;
                 });
-                //console.log(warnings)
                 return warnings;
+            }, function(err) {
+                console.error(err);
             });
         }).fin(function() {
             console.log('Cleaning up ' + dirPath);

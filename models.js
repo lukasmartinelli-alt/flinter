@@ -2,7 +2,7 @@
 var mongoose = require('mongoose-q')();
 
 var repoSchema = new mongoose.Schema({
-    repo: { type: String, required: true },
+    repo: { type: String, required: true, unique: true },
     subscribed: { type: Boolean, default: false }
 });
 
