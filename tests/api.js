@@ -16,6 +16,7 @@ describe('html', function() {
             .put('/nathanepstein/markov')
             .set('Accept', 'application/json')
             .set('Content-Type', 'application/json')
+            .send({ subscribed: true })
             .then(function(res) {
                 expect(res).to.have.status(200);
                 expect(res).to.be.json;

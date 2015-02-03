@@ -116,9 +116,14 @@
               <a href="{{ &repo_url }}">{{ repo }}</a>
               </td>
               <td class="status">
+                  {{#subscribed}}
                   <a href="{{ &report_url }}">
-                    <img src="https://img.shields.io/badge/flint-pending-lightgrey.svg?style=flat" data-src="{{ &badge_url }}" alt="{{ status }}"/>
+                    <img src="https://img.shields.io/badge/flint-pending-lightgrey.svg?style=flat" data-src="{{ &badge_url }}"/>
                   </a>
+                  {{/subscribed}}
+                  {{^subscribed}}
+                  <a href="#" class="button" data-url="{{ &subscribe_url }}">subscribe</a>
+                  {{/subscribed}}
               </td>
             </tr>
         </script>
@@ -143,17 +148,14 @@
                 Mustache.parse(template);
                 function renderSuggestion(suggestion) {
                     var badge_url = suggestion.repo + '.svg?style=flat';
-                    var status = 'failed';
-                    if(suggestion.flintStatus == 0) {
-                        status = 'successful';
-                    }
                     var model = {
                         repo: suggestion.repo,
                         repo_url: 'https://github.com/' + suggestion.repo,
                         badge_url: badge_url,
-                        status: status
+                        subscribe_url: '/' + suggestion.repo,
+                        subscribed: suggestion.subscribed
                     };
-                    return Mustache.render(template, model); 
+                    return Mustache.render(template, model);
                 }
 
                 $('#repo-search').keyup(function() {
@@ -161,13 +163,34 @@
                     if(filter.length > 2) {
                         bloodhound.get(filter, function(suggestions) {
                             table.empty();
-                            $.each(suggestions, function(_, suggestion) { 
+                            $.each(suggestions, function(_, suggestion) {
                                 var rendered = renderSuggestion(suggestion);
                                 table.append(rendered);
+                                $(table).find('a.button').click(function() {
+                                    $.ajax($(this).data('url'), {
+                                        type: 'PUT',
+                                        data: { subscribed: true }
+                                    });
+                                });
                             });
                             bLazy.revalidate();
                         });
                     }
+                });
+
+                $.getJSON('/', function(suggestions) {
+                    table.empty();
+                    $.each(suggestions, function(_, suggestion) {
+                        var rendered = renderSuggestion(suggestion);
+                        table.append(rendered);
+                        $(table).find('a.button').click(function() {
+                            $.ajax($(this).attr('href'), {
+                                type: 'PUT',
+                                data: { subscribed: true }
+                            });
+                        });
+                    });
+                    bLazy.revalidate();
                 });
             });
         </script>

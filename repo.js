@@ -19,12 +19,6 @@ exports.all = function() {
     });
 };
 
-/** Add a repo but don't subscribe it. This is useful if you simply want to add
- * repos to provide better search functionality. */
-exports.add = function(fullName) {
-    return Repo.create({ repo: fullName, subscribed: false });
-};
-
 exports.search = function(query) {
     return Repo.find({repo: new RegExp('^' + query)}).exec().then(function(repos) {
         if(repos.length === 0) {
@@ -36,8 +30,8 @@ exports.search = function(query) {
 
 /** Activate subscription on a repo. Only if a repo is subscribed to
  *  commits are actually checked with flint. */
-exports.subscribe = function(fullName) {
-    var repo = { repo: fullName, subscribed: true };
+exports.subscribe = function(fullName, subscribed) {
+    var repo = { repo: fullName, subscribed: subscribed };
     return Repo.findOneAndUpdate({repo: fullName}, repo, {upsert: true}).exec().then(demongify);
 };
 

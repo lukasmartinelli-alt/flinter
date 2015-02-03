@@ -2,8 +2,6 @@
 var repo = require('./repo');
 
 module.exports = function(app, github) {
-    var autocomplete = require('./autocomplete')(github);
-
     app.get('/', function(req, res) {
         res.format({
             html: function() {
@@ -13,7 +11,7 @@ module.exports = function(app, github) {
                 if(req.query.q) {
                     repo.search(req.query.q).then(function(repos) {
                         res.json(repos);
-                    })
+                    });
                 } else {
                     repo.all().then(function(repos) {
                         res.json(repos);
@@ -51,7 +49,7 @@ module.exports = function(app, github) {
     app.put('/:owner/:repo', function(req, res) {
         var fullName = req.params.owner + '/' + req.params.repo;
         console.log('Subscribe ' + fullName);
-        repo.subscribe(fullName).then(function(subscribedRepo) {
+        repo.subscribe(fullName, req.body.subscribed).then(function(subscribedRepo) {
             res.status(200);
             res.json(subscribedRepo);
             res.send();
