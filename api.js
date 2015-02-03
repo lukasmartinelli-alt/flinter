@@ -23,11 +23,10 @@ module.exports = function(app, github) {
 
     app.get('/:owner/:repo.svg', function(req, res) {
         var fullName = req.params.owner + '/' + req.params.repo;
-        var style = req.query.style;
         console.log('Badge for ' + fullName + ' requested');
         repo.lastCommit(fullName).then(function(commit) {
             var color = 'failed-red';
-            if(commit.status == 'success') {
+            if(commit.status === 'success') {
                 color = 'success-green';
             }
             var badge = 'flint-' + color + '.svg';

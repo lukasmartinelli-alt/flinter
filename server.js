@@ -9,7 +9,8 @@ var mongoose = require('mongoose-q')();
 
 var options = {
     accessToken: process.env.GITHUB_TOKEN,
-    port: process.env.VCAP_APP_PORT || 3000
+    port: process.env.VCAP_APP_PORT || 3000,
+    mongoUrl: process.env.MONGO_URL || 'mongodb://localhost/flinter'
 };
 
 if(!options.accessToken) {
@@ -23,7 +24,7 @@ var github = new GitHubApi({
     headers: { 'user-agent': 'flinter' }
 });
 
-mongoose.connect('mongodb://localhost/flinter');
+mongoose.connect(options.mongoUrl);
 
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, '/public')));
@@ -31,3 +32,5 @@ app.use(express.static(path.join(__dirname, '/public')));
 require('./api')(app, github);
 
 http.listen(options.port);
+
+exports.app = app;

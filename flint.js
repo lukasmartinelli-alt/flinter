@@ -28,7 +28,7 @@ function parseFlintWarning(line) {
         return {
             file: match[1],
             lineno: match[2],
-            message: match[3],
+            message: match[3]
         };
     }
 }
@@ -51,15 +51,14 @@ function flint(repoPath) {
 
 exports.flintCommit = function(commit) {
     return mkdtemp('flinter').then(function(dirPath) {
-        var repoPath = clone(dirPath, commit.repo).then(function() {
+        return clone(dirPath, commit.repo).then(function() {
             var repoName = commit.repo.split('/')[1];
             var repoPath = path.join(dirPath, repoName);
             return checkout(repoPath, commit.sha).then(function() {
                 return repoPath;
             });
-        });
-        return repoPath.then(function(repoPath) {
-            return flint(repoPath).then(function(stdout, stderr) {
+        }).then(function(repoPath) {
+            return flint(repoPath).then(function(stdout) {
                 var flintOutput = stdout[0];
                 var lines = flintOutput.split('\r\n');
                 var warnings = lines.map(parseFlintWarning).filter(function(w) {
@@ -69,7 +68,7 @@ exports.flintCommit = function(commit) {
                 return warnings;
             });
         }).fin(function() {
-            console.log('Cleaning up ' + dirPath)
+            console.log('Cleaning up ' + dirPath);
             rmdir(dirPath);
         });
     });

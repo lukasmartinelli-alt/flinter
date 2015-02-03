@@ -71,7 +71,7 @@ exports.checkPush = function(repo, commits) {
     return Commit.create(commits).then(function () {
         return exports.lastCommit(repo);
     }, function(err) {
-        var duplicateKeyCode = 11000
+        var duplicateKeyCode = 11000;
         if (err && err.code === duplicateKeyCode) {
             console.log('Tried to insert existing commit');
             return exports.lastCommit(repo);

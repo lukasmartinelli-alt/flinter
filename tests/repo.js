@@ -5,7 +5,7 @@ var Repo = require('../models').Repo;
 var Commit = require('../models').Commit;
 var repo = require('../repo');
 
-mongoose.connect('mongodb://localhost/flinter');
+//mongoose.connect('mongodb://localhost/flinter');
 
 describe('repo', function() {
 
