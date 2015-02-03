@@ -11,7 +11,9 @@ module.exports = function(app, github) {
             },
             json: function() {
                 if(req.query.q) {
-                    autocomplete.find(req, res);
+                    repo.search(req.query.q).then(function(repos) {
+                        res.json(repos);
+                    })
                 } else {
                     repo.all().then(function(repos) {
                         res.json(repos);

@@ -124,12 +124,12 @@
         </script>
         <script>
             $(function() {
-                var bLazy = new Blazy({ 
+                var bLazy = new Blazy({
                     selector: 'img'
                 });
                 var bloodhound = new Bloodhound({
                     name: 'repositories',
-                    remote: 'search?q=%QUERY',
+                    remote: '/?q=%QUERY',
                     limit: 15,
                     datumTokenizer: function(d) {
                         return Bloodhound.tokenizers.whitespace(d.repo);
@@ -169,13 +169,6 @@
                         });
                     }
                 });
-/*
-                $('#repo-search').typeahead({
-                    minLength: 3,
-                    highlight: true,
-                }, {
-                    source: engine.ttAdapter()
-                });*/
             });
         </script>
     </body>

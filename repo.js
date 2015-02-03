@@ -25,6 +25,15 @@ exports.add = function(fullName) {
     return Repo.create({ repo: fullName, subscribed: false });
 };
 
+exports.search = function(query) {
+    return Repo.find({repo: new RegExp('^' + query)}).exec().then(function(repos) {
+        if(repos.length === 0) {
+            return Repo.find({repo: new RegExp(query + '$')}).exec();
+        }
+        return repos;
+    });
+};
+
 /** Activate subscription on a repo. Only if a repo is subscribed to
  *  commits are actually checked with flint. */
 exports.subscribe = function(fullName) {
