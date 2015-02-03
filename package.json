@@ -23,6 +23,7 @@
   },
   "homepage": "https://github.com/lukasmartinelli/flinter",
   "dependencies": {
+    "body-parser": "^1.11.0",
     "express": "^4.10.2",
     "github": "^0.2.3",
     "mkdirp": "^0.5.0",

@@ -4,7 +4,7 @@ var eslint = require('gulp-eslint');
 var mocha = require('gulp-mocha');
 var istanbul = require('gulp-istanbul');
 
-gulp.task('test', function (cb) {
+gulp.task('test', function () {
     return gulp.src('*.js')
         .pipe(istanbul({includeUntested: true}))
         .pipe(istanbul.hookRequire())

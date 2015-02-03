@@ -23,5 +23,5 @@ module.exports = function(github) {
                 res.send(suggestions);
             });
         }
-    }
+    };
 };
