@@ -42,6 +42,8 @@ RUN autoreconf -ivf && \
 # build and install double-conversion
 WORKDIR /tmp/build
 RUN git clone https://github.com/floitsch/double-conversion.git
+# until I get the newest version to run
+RUN git checkout 18988522ab3371e50b37e0c3e74b399f251f757c
 WORKDIR double-conversion
 RUN scons install
 
